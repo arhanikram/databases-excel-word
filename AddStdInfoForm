@@ -1,0 +1,93 @@
+Private Sub Add_Click()
+    Dim fn_rng As Range
+    Dim ln_rng As Range
+    Dim id_rng As Range
+    Dim course_rng As Range
+    Dim m1 As Range
+    Dim m2 As Range
+    Dim m3 As Range
+    Dim m4 As Range
+    Dim midterm As Range
+    Dim final As Range
+    
+    
+    Set fn_rng = Range("A1").End(xlDown).Offset(1, 0)
+    Set ln_rng = Range("B1").End(xlDown).Offset(1, 0)
+    Set id_rng = Range("C1").End(xlDown).Offset(1, 0)
+    Set course_rng = Range("D1").End(xlDown).Offset(1, 0)
+    Set m1 = Range("E1").End(xlDown).Offset(1, 0)
+    Set m2 = Range("F1").End(xlDown).Offset(1, 0)
+    Set m3 = Range("G1").End(xlDown).Offset(1, 0)
+    Set m4 = Range("H1").End(xlDown).Offset(1, 0)
+    Set midterm = Range("I1").End(xlDown).Offset(1, 0)
+    Set final = Range("J1").End(xlDown).Offset(1, 0)
+    
+    
+    fn_rng.Value = FirstNameBox.Value
+    ln_rng.Value = LastNameBox.Value
+    id_rng.Value = IDBox.Value
+    course_rng.Value = CourseBox.Value
+    m1.Value = M1Box.Value
+    m2.Value = M2Box.Value
+    m3.Value = M3Box.Value
+    m4.Value = M4Box.Value
+    midterm.Value = MidtermBox.Value
+    final.Value = FinalBox.Value
+    
+    
+    
+End Sub
+
+Private Sub Cancel_Click()
+    Unload Me
+End Sub
+
+Private Sub Save_Click()
+    Dim cn As New ADODB.Connection
+    Dim rs As New ADODB.Recordset
+    Dim obj As ADODB.Fields
+    Dim connStr As String, providerStr As String, sqlStr As String
+    Dim i As Integer
+    Dim list As String
+    Dim row As Range
+    
+    
+    
+    connStr = "Data Source=" & Application.ActiveWorkbook.Path & "\registrar.mdb"
+    providerStr = "Microsoft.ACE.OLEDB.12.0"
+         
+    With cn
+        .ConnectionString = connStr
+        .Provider = providerStr
+        .Open
+    End With
+    Set rs = New ADODB.Recordset
+    
+    rs.CursorLocation = adUseServer
+    rs.Open Source:="students", _
+    ActiveConnection:=cn, _
+    CursorType:=adOpenDynamic, _
+    LockType:=adLockOptimistic
+    
+    
+
+    
+    For Each row In Range("A2", Range("A2").End(xlDown))
+        rs.AddNew
+        rs("FirstName") = row
+        rs("LastName") = row.Offset(0, 1)
+        rs("ID") = row.Offset(0, 2)
+        rs("Course") = row.Offset(0, 3)
+        rs("A1") = CInt(row.Offset(0, 4))
+        rs("A2") = CInt(row.Offset(0, 5))
+        rs("A3") = CInt(row.Offset(0, 6))
+        rs("A4") = CInt(row.Offset(0, 7))
+        rs("Midterm") = CInt(row.Offset(0, 8))
+        rs("Final") = CInt(row.Offset(0, 9))
+        rs.Update
+    Next
+    
+    rs.Close
+    cn.Close
+End Sub
+
