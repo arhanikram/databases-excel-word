@@ -1,0 +1,38 @@
+Private Sub Browse_Click()
+    Dim fd As Office.FileDialog
+
+    Set fd = Application.FileDialog(msoFileDialogFilePicker)
+   With fd
+
+      .AllowMultiSelect = False
+
+      .Title = "Please select the file."
+
+      If .Show = True Then
+        NameBox.Value = .SelectedItems(1)
+
+      End If
+      
+    End With
+End Sub
+
+Private Sub Cancel_Click()
+    Unload Me
+    
+End Sub
+
+Private Sub DoIt_Click()
+    Const strFileName = "C:\Users\Arhan\Documents\CP212\Assignment 5\students.csv"
+    Dim wbkS As Workbook
+    Dim wshS As Worksheet
+    Dim wshT As Worksheet
+    
+    Set wshT = ActiveWorkbook.ActiveSheet
+    Set wbkS = Workbooks.Open(Filename:=strFileName)
+    Set wshS = wbkS.Worksheets(1)
+    wshS.UsedRange.Copy Destination:=wshT.Range("A1")
+    wbkS.Close SaveChanges:=False
+    
+    
+    
+End Sub
