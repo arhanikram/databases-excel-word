@@ -1,0 +1,92 @@
+Private Sub AverageButton_Click()
+    Dim assignments As Range
+    Dim midterm As Range
+    Dim final As Range
+    Dim asgn As Variant
+    Dim mid As Variant
+    Dim fin As Variant
+    
+    
+    Set assignments = Range("E2:H2").End(xlDown)
+    Set midterm = Range("I2").End(xlDown)
+    Set final = Range("J2").End(xlDown)
+    
+    
+    asgn = Application.Average(assignments)
+    mid = Application.Average(midterm)
+    fin = Application.Average(final)
+
+    MsgBox "Assignment Average: " & asgn & vbNewLine & "Midterm Average: " & mid & vbNewLine & "Final Average: " & fin
+
+    
+End Sub
+
+Private Sub CancelButton_Click()
+    Unload Me
+End Sub
+
+Private Sub ContinueButton_Click()
+    If ImportButton.Value = True Then
+        ImportStudent.Show
+    
+    End If
+    
+    If ViewButton.Value = True Then
+        Dim wdApp As Word.Application
+        Dim wdDoc As Document
+        
+        Set wdApp = New Word.Application
+        wdApp.Visible = True
+        
+        Set wdDoc = wdApp.Documents.Add
+        
+        Set wdApp = Nothing
+        Set wdDoc = Nothing
+    
+    
+    End If
+    
+    If AddButton.Value = True Then
+        AddInfo.Show
+    
+    End If
+    
+    If ListButton.Value = True Then
+     
+     Dim cn As New ADODB.Connection
+     Dim rs As New ADODB.Recordset
+     Dim obj As ADODB.Fields
+     Dim connStr As String, providerStr As String, sqlStr As String
+     Dim i As Integer
+     Dim list As String
+     
+     
+     connStr = "Data Source=" & Application.ActiveWorkbook.Path & "\registrar.mdb"
+
+     providerStr = "Microsoft.ACE.OLEDB.12.0"
+         
+     With cn
+         .ConnectionString = connStr
+         .Provider = providerStr
+         .Open
+     End With
+     sqlStr = "SELECT * FROM courses"
+     rs.Open sqlStr, cn
+     
+    With rs
+     Do Until .EOF
+          
+         list = list & .Fields("CourseCode") & vbNewLine
+         .MoveNext
+     Loop
+     End With
+     rs.Close
+     
+     MsgBox list
+     
+    End If
+
+
+
+    
+End Sub
